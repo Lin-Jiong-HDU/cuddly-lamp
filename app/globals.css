@@ -290,6 +290,31 @@ a:hover {
   margin: 3rem 0;
 }
 
+/* Images in prose */
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 2rem 0;
+  border: 1px solid var(--color-border);
+}
+
+.prose figure {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.prose figure img {
+  margin: 0;
+}
+
+.prose figcaption {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
 /* Dark mode specific adjustments */
 [data-theme="dark"] .prose code {
   background: var(--color-cream-dark);
