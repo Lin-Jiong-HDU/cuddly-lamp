@@ -3,6 +3,7 @@ import { DM_Sans, Crimson_Pro } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/Navigation";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { EasterEggManager } from "@/components/easter-eggs/EasterEggManager";
 
 const dmSans = DM_Sans({
 	subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
 		<html lang="zh-CN" suppressHydrationWarning>
 			<body className={`${dmSans.variable} ${crimsonPro.variable}`}>
 				<ThemeProvider>
+					<EasterEggManager />
 					<div className="min-h-screen flex flex-col">
 						<Navigation />
 						<main className="flex-1">{children}</main>
