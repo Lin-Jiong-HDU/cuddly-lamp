@@ -35,7 +35,7 @@ export default function AboutPage() {
           <h2 className="font-serif text-2xl text-[var(--color-text)] mb-8">
             技术栈
           </h2>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-8">
             {[
               {
                 title: "后端开发",
@@ -54,18 +54,15 @@ export default function AboutPage() {
                 items: ["Rust", "Kubernetes", "分布式系统", "系统设计"],
               },
             ].map((category, index) => (
-              <div
-                key={index}
-                className="p-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg"
-              >
+              <div key={index}>
                 <h3 className="font-serif text-lg text-[var(--color-text)] mb-3">
                   {category.title}
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-x-4 gap-y-3">
                   {category.items.map((item) => (
                     <span
                       key={item}
-                      className="text-sm px-3 py-1 bg-[var(--color-border)] text-[var(--color-text-secondary)] rounded-full"
+                      className="inline-flex items-center px-3 py-1.5 text-sm bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-secondary)] rounded-md whitespace-nowrap"
                     >
                       {item}
                     </span>
