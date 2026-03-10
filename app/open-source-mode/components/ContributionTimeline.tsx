@@ -35,7 +35,9 @@ export default function ContributionTimeline() {
         if (!response.ok) throw new Error("Failed to fetch");
         const events = await response.json();
         const allCommits: Commit[] = events
-          .filter((e: { type: string }) => e.type === "PushEvent")
+          .filter((e: { type: string; payload?: { commits?: { sha: string; message: string }[] } }) =>
+            e.type === "PushEvent" && e.payload?.commits
+          )
           .slice(0, 10)
           .flatMap((e: { repo: { name: string }; payload: { commits: { sha: string; message: string }[] }; created_at: string }) =>
             e.payload.commits.map((c) => ({
