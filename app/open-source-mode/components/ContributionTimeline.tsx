@@ -22,10 +22,6 @@ function formatRelativeTime(dateString: string): string {
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-interface ContributionTimelineProps {
-  commits: Commit[];
-}
-
 export default function ContributionTimeline() {
   const [commits, setCommits] = useState<Commit[]>([]);
   const [loading, setLoading] = useState(true);
@@ -68,7 +64,7 @@ export default function ContributionTimeline() {
         viewport={{ once: true }}
         className="font-serif text-3xl text-white mb-12 text-center"
       >
-        开源恒星系统
+        你的贡献轨迹
       </motion.h2>
 
       {loading ? (
@@ -76,7 +72,7 @@ export default function ContributionTimeline() {
           {[...Array(4)].map((_, i) => (
             <div key={i} className="h-16 bg-white/5 rounded animate-pulse" />
           ))}
-        )}
+        </div>
       ) : (
         <div className="relative">
           {/* Timeline line */}
@@ -105,7 +101,7 @@ export default function ContributionTimeline() {
                     <span className="text-xs text-white/30">
                       {formatRelativeTime(commit.date)}
                     </span>
-                  </p>
+                  </div>
                   <p className="text-white/70 text-sm mb-1">
                     {commit.message}
                   </p>
@@ -114,7 +110,7 @@ export default function ContributionTimeline() {
               </motion.div>
             ))}
           </div>
-        )}
+        </div>
       )}
     </section>
   );

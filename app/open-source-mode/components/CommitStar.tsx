@@ -11,63 +11,45 @@ interface CommitStarProps {
   color: string;
   size: number;
   data?: CommitData;
-  visible: boolean
+  visible: boolean;
 }
 
 export function CommitStar({ position, color, size, data, visible }: CommitStarProps) {
-  const meshRef = useRef<THREE.Mesh>(null)
-  const [hovered, setHovered] = useState(false)
+  const meshRef = useRef<THREE.Mesh>(null);
+  const [hovered, setHovered] = useState(false);
 
   useFrame((state) => {
-      if (meshRef.current) {
-        // Subtle floating animation
-        meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime + position[0]) * 0.05
-      }
+    if (meshRef.current) {
+      // Subtle floating animation
+      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime + position[0]) * 0.05;
     }
-  })
+  });
 
-  if (!visible) return null
+    if (!visible) return null;
 
-  return (
-    <group position={position}>
-      {/* Outer glow */}
-      <mesh ref={glowRef}>
-        <sphereGeometry args={[0.2, 32, 32]} />
-        <meshBasicMaterial
-          color={project.color}
-          transparent
-          opacity={0.15}
-        />
-      </mesh>
+    return (
+      <group position={position}>
+        <mesh
+          ref={meshRef}
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+        >
+          <sphereGeometry args={[hovered ? size * 1.5 : size, 16, 16]} />
+          <meshBasicMaterial
+            color={color}
+            transparent
+            opacity={hovered ? 1 : 0.8}
+          />
+        </mesh>
 
-      {/* Core */}
-      <mesh
-        ref={meshRef}
-        onPointerEnter={() => {
-          setHovered(true)
-          onHover(project)
-        }}
-        onPointerLeave={() => {
-          setHovered(false)
-          onHover(null)
-        }}
-      >
-        {/* Point light for glow effect */}
-      <pointLight
-        color={project.color}
-        intensity={hovered ? 2 : 1}
-        distance={5}
-      />
-
-      {/* Label */}
-      {hovered && (
-        <Html center distanceFactor={10}>
-          <div className="px-3 py-2 bg-black/80 rounded-lg border border-white/20 whitespace-nowrap">
-            <div className="font-bold text-white">{project.name}</div>
-            <div className="text-xs text-white/70">{project.category}</div>
+        {hovered && data && (
+          <Html center distanceFactor={15}>
+            <div className="px-2 py-1 bg-black/80 rounded border border-white/20 whitespace-nowrap text-xs">
+              <code className="text-green-400">{data.sha.substring(0, 7)}</code>
+              <div className="text-white/70 mt-1">{data.message}</div>
+            </div>
           </Html>
-        </group>
-      )}
-    </group>
-  );
+        )}
+      </group>
+    );
 }

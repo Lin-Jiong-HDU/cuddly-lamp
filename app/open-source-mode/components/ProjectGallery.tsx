@@ -13,6 +13,9 @@ export default function ProjectGallery() {
           viewport={{ once: true }}
           className="font-serif text-3xl text-white mb-12 text-center"
         >
+          开源恒星系统
+        </motion.h2>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {classicProjects.map((project, index) => (
             <motion.a
