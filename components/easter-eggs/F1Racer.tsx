@@ -1,16 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 
 interface F1RacerProps {
 	triggerRef: React.RefObject<HTMLElement | null>;
 }
 
 export function F1Racer({ triggerRef }: F1RacerProps) {
+	const router = useRouter();
 	const [active, setActive] = useState(false);
 	const clickCountRef = useRef(0);
+	const extraClickCountRef = useRef(0);
 	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const audioRef = useRef<HTMLAudioElement | null>(null);
+	const animationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	const trigger = useCallback(() => {
 		if (audioRef.current) {
@@ -20,14 +24,45 @@ export function F1Racer({ triggerRef }: F1RacerProps) {
 			});
 		}
 		setActive(true);
-		setTimeout(() => setActive(false), 2500);
+
+		// 清除之前的动画超时
+		if (animationTimeoutRef.current) {
+			clearTimeout(animationTimeoutRef.current);
+		}
+
+		// 2.5 秒后结束动画
+		animationTimeoutRef.current = setTimeout(() => {
+			setActive(false);
+			extraClickCountRef.current = 0;
+		}, 2500);
 	}, []);
+
+	const triggerF1Mode = useCallback(() => {
+		// 清除动画超时，直接跳转
+		if (animationTimeoutRef.current) {
+			clearTimeout(animationTimeoutRef.current);
+		}
+		setActive(false);
+		router.push("/f1-mode");
+	}, [router]);
 
 	useEffect(() => {
 		const element = triggerRef.current;
 		if (!element) return;
 
 		const handleClick = () => {
+			// 如果动画正在播放，计入额外点击
+			if (active) {
+				extraClickCountRef.current++;
+				if (extraClickCountRef.current >= 2) {
+					triggerF1Mode();
+					clickCountRef.current = 0;
+					extraClickCountRef.current = 0;
+				}
+				return;
+			}
+
+			// 正常的第一次触发逻辑
 			clickCountRef.current++;
 			if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
@@ -45,8 +80,9 @@ export function F1Racer({ triggerRef }: F1RacerProps) {
 		return () => {
 			element.removeEventListener("click", handleClick);
 			if (timeoutRef.current) clearTimeout(timeoutRef.current);
+			if (animationTimeoutRef.current) clearTimeout(animationTimeoutRef.current);
 		};
-	}, [triggerRef, trigger]);
+	}, [triggerRef, trigger, triggerF1Mode, active]);
 
 	return (
 		<>
@@ -114,6 +150,11 @@ export function F1Racer({ triggerRef }: F1RacerProps) {
 								</radialGradient>
 							</defs>
 						</svg>
+					</div>
+
+					{/* 提示文字 */}
+					<div className="absolute bottom-20 left-1/2 -translate-x-1/2 text-white/70 text-sm animate-pulse">
+						Keep clicking to enter F1 Mode!
 					</div>
 
 					{/* Animation styles */}
