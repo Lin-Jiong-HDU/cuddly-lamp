@@ -71,22 +71,22 @@ export default function F1ModePage() {
 			<section className="relative h-[200vh]">
 				{mounted && <Track3D progress={trackProgress} />}
 
-				{/* 赛道名称 */}
-				<div className="sticky bottom-20 flex justify-center pointer-events-none">
-					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: trackProgress > 0.9 ? 1 : 0, y: trackProgress > 0.9 ? 0 : 20 }}
-						transition={{ duration: 0.5 }}
-						className="text-center"
-					>
+				{/* 赛道名称 - 绘制完成后显示在赛道下方 */}
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: trackProgress >= 1 ? 1 : 0 }}
+					transition={{ duration: 0.8 }}
+					className="sticky top-[70vh] flex justify-center pointer-events-none z-10"
+				>
+					<div className="text-center">
 						<div className="text-4xl md:text-6xl font-serif text-white tracking-widest">
 							MONZA
 						</div>
 						<div className="text-sm text-[#E10600] tracking-[0.3em] mt-2">
 							TEMPLE OF SPEED
 						</div>
-					</motion.div>
-				</div>
+					</div>
+				</motion.div>
 
 				{/* 滚动提示 */}
 				<div className="absolute bottom-10 left-1/2 -translate-x-1/2">
