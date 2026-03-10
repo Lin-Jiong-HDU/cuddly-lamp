@@ -19,13 +19,19 @@ const Track3D = dynamic(() => import("./components/Track3D"), {
 
 export default function F1ModePage() {
 	const [mounted, setMounted] = useState(false);
-	const { scrollYProgress } = useScroll();
+	const trackSectionRef = useRef<HTMLElement>(null);
 	const [trackProgress, setTrackProgress] = useState(0);
 	const router = useRouter();
 	const previousThemeRef = useRef<string | null>(null);
 
-	// 赛道绘制进度（第一个屏幕的滚动）
-	const drawProgress = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
+	// 基于第一个 section 的滚动进度，而不是整个页面
+	const { scrollYProgress: trackScrollProgress } = useScroll({
+		target: trackSectionRef,
+		offset: ["start start", "end end"],
+	});
+
+	// 赛道绘制进度：在 section 的前 50% 完成绘制
+	const drawProgress = useTransform(trackScrollProgress, [0, 0.5], [0, 1]);
 
 	// 进入页面时自动切换到深色模式，离开时恢复
 	useEffect(() => {
@@ -68,7 +74,7 @@ export default function F1ModePage() {
 			</button>
 
 			{/* Section 1: 3D 赛道体验 */}
-			<section className="relative h-[200vh]">
+			<section ref={trackSectionRef} className="relative h-[200vh]">
 				{mounted && <Track3D progress={trackProgress} />}
 
 				{/* 赛道名称 - 绘制完成后显示在赛道下方 */}
