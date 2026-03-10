@@ -1,5 +1,6 @@
 import GitHubCalendar from "./github-calendar";
 import GitHubActivity from "./github-activity";
+import GitHubLanguages from "./github-languages";
 
 export default function AboutPage() {
 	return (
@@ -38,6 +39,9 @@ export default function AboutPage() {
 
 				{/* GitHub Activity */}
 				<GitHubActivity username="Lin-Jiong-HDU" limit={5} />
+
+				{/* GitHub Languages */}
+				<GitHubLanguages username="Lin-Jiong-HDU" />
 
 				{/* Tech Stack */}
 				<section className="mt-20 opacity-0 animate-fade-in-up delay-300">
