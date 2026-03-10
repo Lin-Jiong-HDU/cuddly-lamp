@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Crimson_Pro } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Navigation } from "@/components/Navigation";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -18,6 +19,33 @@ const crimsonPro = Crimson_Pro({
 	display: "swap",
 });
 
+const mesloLGS = localFont({
+	src: [
+		{
+			path: "../public/fonts/MesloLGS NF Regular.ttf",
+			weight: "400",
+			style: "normal",
+		},
+		{
+			path: "../public/fonts/MesloLGS NF Italic.ttf",
+			weight: "400",
+			style: "italic",
+		},
+		{
+			path: "../public/fonts/MesloLGS NF Bold.ttf",
+			weight: "700",
+			style: "normal",
+		},
+		{
+			path: "../public/fonts/MesloLGS NF Bold Italic.ttf",
+			weight: "700",
+			style: "italic",
+		},
+	],
+	variable: "--font-meslo",
+	display: "swap",
+});
+
 export const metadata: Metadata = {
 	title: "JohnLin 的博客",
 	description: "一名热爱技术与开源的大学生，记录技术学习与思考",
@@ -30,7 +58,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="zh-CN" suppressHydrationWarning>
-			<body className={`${dmSans.variable} ${crimsonPro.variable}`}>
+			<body className={`${dmSans.variable} ${crimsonPro.variable} ${mesloLGS.variable}`}>
 				<ThemeProvider>
 					<EasterEggManager />
 					<div className="min-h-screen flex flex-col">
