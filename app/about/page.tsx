@@ -1,3 +1,6 @@
+import GitHubCalendar from "./github-calendar";
+import GitHubActivity from "./github-activity";
+
 export default function AboutPage() {
 	return (
 		<div className="min-h-screen pt-32 pb-20 px-6">
@@ -29,6 +32,12 @@ export default function AboutPage() {
 						这个博客是我记录技术学习、项目经验和个人思考的地方。希望能与你分享我的成长历程。
 					</p>
 				</div>
+
+				{/* GitHub Contributions */}
+				<GitHubCalendar username="Lin-Jiong-HDU" />
+
+				{/* GitHub Activity */}
+				<GitHubActivity username="Lin-Jiong-HDU" limit={5} />
 
 				{/* Tech Stack */}
 				<section className="mt-20 opacity-0 animate-fade-in-up delay-300">
@@ -121,9 +130,9 @@ export default function AboutPage() {
 					</p>
 					<div className="flex flex-wrap gap-4">
 						{[
-							{ name: "GitHub", href: "https://github.com/johnlin" },
-							{ name: "Email", href: "mailto:hello@johnlin.dev" },
-							{ name: "Twitter", href: "https://twitter.com/johnlin" },
+							{ name: "GitHub", href: "https://github.com/Lin-Jiong-HDU" },
+							{ name: "Email", href: "mailto:linjiong2020@outlook.com" },
+							{ name: "Twitter", href: "" },
 						].map((item) => (
 							<a
 								key={item.name}
