@@ -1,0 +1,78 @@
+// lib/open-source-data/projects.ts
+
+import type { ProjectData } from './types';
+
+export const classicProjects: ProjectData[] = [
+  {
+    id: 'linux',
+    name: 'Linux',
+    description: '改变世界的操作系统内核',
+    category: '操作系统',
+    color: '#e54b4b',
+    github: 'https://github.com/torvalds/linux',
+    position: [-4, 1, 0],
+  },
+  {
+    id: 'git',
+    name: 'Git',
+    description: '分布式版本控制系统',
+    category: '版本控制',
+    color: '#f05032',
+    github: 'https://github.com/git/git',
+    position: [3, 2, -2],
+  },
+  {
+    id: 'react',
+    name: 'React',
+    description: '声明式、高效的 JavaScript UI 库',
+    category: '前端框架',
+    color: '#61dafb',
+    github: 'https://github.com/facebook/react',
+    position: [4, 0, 2],
+  },
+  {
+    id: 'python',
+    name: 'Python',
+    description: '优雅而强大的编程语言',
+    category: '编程语言',
+    color: '#3776ab',
+    github: 'https://github.com/python/cpython',
+    position: [-3, -1, 3],
+  },
+  {
+    id: 'vscode',
+    name: 'VS Code',
+    description: '轻量但强大的开源代码编辑器',
+    category: '开发工具',
+    color: '#007acc',
+    github: 'https://github.com/microsoft/vscode',
+    position: [2, -2, -3],
+  },
+  {
+    id: 'nodejs',
+    name: 'Node.js',
+    description: 'JavaScript 运行时环境',
+    category: '运行时',
+    color: '#339933',
+    github: 'https://github.com/nodejs/node',
+    position: [-2, 2, -1],
+  },
+  {
+    id: 'docker',
+    name: 'Docker',
+    description: '容器化应用平台',
+    category: '容器化',
+    color: '#2496ed',
+    github: 'https://github.com/moby/moby',
+    position: [0, -1, -4],
+  },
+  {
+    id: 'rust',
+    name: 'Rust',
+    description: '安全、并发、高效的系统编程语言',
+    category: '编程语言',
+    color: '#dea584',
+    github: 'https://github.com/rust-lang/rust',
+    position: [-1, 1, 4],
+  },
+];
