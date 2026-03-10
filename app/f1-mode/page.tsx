@@ -88,17 +88,7 @@ export default function F1ModePage() {
 					</div>
 				</motion.div>
 
-				{/* 滚动提示 */}
-				<div className="absolute bottom-10 left-1/2 -translate-x-1/2">
-					<motion.div
-						animate={{ y: [0, 10, 0] }}
-						transition={{ duration: 1.5, repeat: Infinity }}
-						className="text-white/50 text-sm"
-					>
-						Scroll to draw ↓
-					</motion.div>
-				</div>
-			</section>
+				</section>
 
 			{/* Section 2: 个人喜好 */}
 			<PersonalFavorites />
