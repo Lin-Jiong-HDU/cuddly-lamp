@@ -73,7 +73,7 @@ interface Track3DProps {
 
 export default function Track3D({ progress }: Track3DProps) {
 	return (
-		<div className="w-full h-screen fixed inset-0">
+		<div className="w-full h-screen sticky top-0">
 			<Canvas
 				camera={{ position: [0, 3, 8], fov: 60 }}
 				style={{ background: "#0a0a0a" }}
