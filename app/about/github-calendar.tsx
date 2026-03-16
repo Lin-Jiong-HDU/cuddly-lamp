@@ -95,12 +95,29 @@ export default function GitHubCalendar({ username }: GitHubCalendarProps) {
 									className={`w-3 h-3 rounded-sm ${getContributionColor(day.contributionCount)} cursor-pointer hover:ring-1 hover:ring-[var(--color-accent)] transition-all`}
 									onMouseEnter={(e) => {
 										const rect = e.currentTarget.getBoundingClientRect();
+										const tooltipWidth = 150; // 预估tooltip宽度
+										const tooltipHeight = 28; // tooltip高度
+										const padding = 8; // 边距
+
+										// 计算水平位置，确保不超出屏幕
+										let x = rect.left + rect.width / 2 - tooltipWidth / 2;
+										if (x < padding) x = padding;
+										if (x + tooltipWidth > window.innerWidth - padding) {
+											x = window.innerWidth - tooltipWidth - padding;
+										}
+
+										// 计算垂直位置，优先显示在上方，如果空间不够则显示在下方
+										let y = rect.top - tooltipHeight - 4;
+										if (y < padding) {
+											y = rect.bottom + 4;
+										}
+
 										setTooltip({
 											visible: true,
 											date: day.date,
 											count: day.contributionCount,
-											x: rect.left,
-											y: rect.top - 28,
+											x,
+											y,
 										});
 									}}
 									onMouseLeave={() => setTooltip((t) => ({ ...t, visible: false }))}
