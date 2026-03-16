@@ -34,9 +34,9 @@ export default function GitHubCalendar({ username }: GitHubCalendarProps) {
 		visible: boolean;
 		date: string;
 		count: number;
-		x: number;
-		y: number;
-	}>({ visible: false, date: "", count: 0, x: 0, y: 0 });
+		left: number;
+		top: number;
+	}>({ visible: false, date: "", count: 0, left: 0, top: 0 });
 
 	useEffect(() => {
 		async function fetchContributions() {
@@ -61,6 +61,29 @@ export default function GitHubCalendar({ username }: GitHubCalendarProps) {
 	const totalContributions = data?.contributions
 		? data.contributions.reduce((total, week) => total + week.reduce((sum, day) => sum + day.contributionCount, 0), 0)
 		: 0;
+
+	// 计算tooltip位置
+	const calculateTooltipPosition = (rect: DOMRect) => {
+		const padding = 8;
+		const gap = 4;
+		const tooltipWidth = 180; // 预估宽度
+		const tooltipHeight = 24; // 预估高度
+
+		// 水平居中，确保不超出视口
+		let left = rect.left + rect.width / 2 - tooltipWidth / 2;
+		if (left < padding) left = padding;
+		if (left + tooltipWidth > window.innerWidth - padding) {
+			left = window.innerWidth - tooltipWidth - padding;
+		}
+
+		// 垂直方向优先显示在上方
+		let top = rect.top - tooltipHeight - gap;
+		if (top < padding) {
+			top = rect.bottom + gap;
+		}
+
+		return { left, top };
+	};
 
 	if (loading) {
 		return (
@@ -95,29 +118,13 @@ export default function GitHubCalendar({ username }: GitHubCalendarProps) {
 									className={`w-3 h-3 rounded-sm ${getContributionColor(day.contributionCount)} cursor-pointer hover:ring-1 hover:ring-[var(--color-accent)] transition-all`}
 									onMouseEnter={(e) => {
 										const rect = e.currentTarget.getBoundingClientRect();
-										const tooltipWidth = 150; // 预估tooltip宽度
-										const tooltipHeight = 28; // tooltip高度
-										const padding = 8; // 边距
-
-										// 计算水平位置，确保不超出屏幕
-										let x = rect.left + rect.width / 2 - tooltipWidth / 2;
-										if (x < padding) x = padding;
-										if (x + tooltipWidth > window.innerWidth - padding) {
-											x = window.innerWidth - tooltipWidth - padding;
-										}
-
-										// 计算垂直位置，优先显示在上方，如果空间不够则显示在下方
-										let y = rect.top - tooltipHeight - 4;
-										if (y < padding) {
-											y = rect.bottom + 4;
-										}
-
+										const { left, top } = calculateTooltipPosition(rect);
 										setTooltip({
 											visible: true,
 											date: day.date,
 											count: day.contributionCount,
-											x,
-											y,
+											left,
+											top,
 										});
 									}}
 									onMouseLeave={() => setTooltip((t) => ({ ...t, visible: false }))}
@@ -131,8 +138,11 @@ export default function GitHubCalendar({ username }: GitHubCalendarProps) {
 			{/* Tooltip */}
 			{tooltip.visible && (
 				<div
-					className="fixed z-50 px-2 py-1 text-xs bg-[var(--color-text)] text-[var(--color-background)] rounded shadow-lg pointer-events-none"
-					style={{ left: tooltip.x, top: tooltip.y }}
+					className="fixed z-50 px-2 py-1 text-xs whitespace-nowrap bg-[var(--color-text)] text-[var(--color-background)] rounded shadow-lg pointer-events-none"
+					style={{
+						left: tooltip.left,
+						top: tooltip.top,
+					}}
 				>
 					{tooltip.date}: {tooltip.count} contribution{tooltip.count !== 1 ? "s" : ""}
 				</div>
