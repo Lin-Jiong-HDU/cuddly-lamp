@@ -15,7 +15,7 @@ export default function PaperNotesPage() {
 
   // Group by category
   const grouped = notes.reduce<Record<string, typeof notes>>((acc, note) => {
-    const key = note.category || "other";
+    const key = note.category || "其他";
     if (!acc[key]) acc[key] = [];
     acc[key].push(note);
     return acc;
@@ -56,14 +56,9 @@ export default function PaperNotesPage() {
                   >
                     <Link href={`/paper-notes/${note.slug}`} className="block">
                       <div className="card p-6 rounded-lg">
-                        <div className="flex items-center justify-between mb-2">
-                          <h3 className="font-serif text-xl text-[var(--color-text)] group-hover:text-[var(--color-accent-dark)] transition-colors">
-                            {note.title}
-                          </h3>
-                          <span className="text-xs px-2 py-1 bg-[var(--color-border)] text-[var(--color-text-secondary)] rounded ml-4 shrink-0">
-                            {note.category}
-                          </span>
-                        </div>
+                        <h3 className="font-serif text-xl text-[var(--color-text)] group-hover:text-[var(--color-accent-dark)] transition-colors mb-2">
+                          {note.title}
+                        </h3>
                         <time className="text-sm text-[var(--color-text-muted)]">
                           {formatDate(note.date)}
                         </time>
