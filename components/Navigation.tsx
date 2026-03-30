@@ -9,6 +9,7 @@ const navItems = [
 	{ href: "/", label: "首页" },
 	{ href: "/about", label: "关于" },
 	{ href: "/blog", label: "博客" },
+	{ href: "/paper-notes", label: "论文笔记" },
 ];
 
 export function Navigation() {
@@ -69,23 +70,25 @@ export function Navigation() {
 
 					<div className="flex items-center gap-8">
 						<ul className="flex items-center gap-8">
-							{navItems.map((item) => (
+							{navItems.map((item) => {
+								const isActive = item.href === "/" ? pathname === "/" : pathname === item.href || pathname.startsWith(item.href + "/");
+								return (
 								<li key={item.href}>
 									<Link
 										href={item.href}
 										className={`relative text-sm tracking-wide transition-colors ${
-											pathname === item.href
+											isActive
 												? "text-[var(--color-text)]"
 												: "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
 										}`}
 									>
 										{item.label}
-										{pathname === item.href && (
+										{isActive && (
 											<span className="absolute -bottom-1 left-0 right-0 h-px bg-[var(--color-accent)]" />
 										)}
 									</Link>
 								</li>
-							))}
+							)})}
 						</ul>
 
 						<ThemeToggle />
