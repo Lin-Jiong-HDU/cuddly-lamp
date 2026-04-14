@@ -10,6 +10,7 @@ const navItems = [
 	{ href: "/about", label: "关于" },
 	{ href: "/blog", label: "博客" },
 	{ href: "/paper-notes", label: "论文笔记" },
+	{ href: "/chat", label: "Chat" },
 ];
 
 export function Navigation() {
