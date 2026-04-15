@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { getSuggestedQuestions, ChatMessage } from "@/lib/chat";
 
 export default function ChatPage() {
@@ -9,6 +10,8 @@ export default function ChatPage() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const halloweenTriggered = useRef(false);
+  const router = useRouter();
   const suggestedQuestions = getSuggestedQuestions();
 
   const scrollToBottom = useCallback(() => {
@@ -24,6 +27,9 @@ export default function ChatPage() {
       if (!content.trim() || isLoading) return;
 
       const userMessage: ChatMessage = { role: "user", content: content.trim() };
+      if (content.includes("邪恶大南瓜")) {
+        halloweenTriggered.current = true;
+      }
       const newMessages = [...messages, userMessage];
       setMessages(newMessages);
       setInput("");
@@ -89,6 +95,11 @@ export default function ChatPage() {
             }
           }
         }
+        // Halloween easter egg redirect
+        if (halloweenTriggered.current) {
+          halloweenTriggered.current = false;
+          setTimeout(() => router.push("/halloween"), 1500);
+        }
       } catch {
         setMessages((prev) => [
           ...prev,
@@ -99,7 +110,7 @@ export default function ChatPage() {
         inputRef.current?.focus();
       }
     },
-    [messages, isLoading]
+    [messages, isLoading, router]
   );
 
   const handleSubmit = useCallback(
