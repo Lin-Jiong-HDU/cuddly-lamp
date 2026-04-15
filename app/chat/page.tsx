@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { getSuggestedQuestions, ChatMessage } from "@/lib/chat";
 
 export default function ChatPage() {
@@ -11,7 +10,7 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const halloweenTriggered = useRef(false);
-  const router = useRouter();
+  const [showGhost, setShowGhost] = useState(false);
   const suggestedQuestions = getSuggestedQuestions();
 
   const scrollToBottom = useCallback(() => {
@@ -95,10 +94,11 @@ export default function ChatPage() {
             }
           }
         }
-        // Halloween easter egg redirect
+        // Halloween easter egg
         if (halloweenTriggered.current) {
           halloweenTriggered.current = false;
-          setTimeout(() => router.push("/halloween"), 1500);
+          setShowGhost(true);
+          setTimeout(() => setShowGhost(false), 3000);
         }
       } catch {
         setMessages((prev) => [
@@ -110,7 +110,7 @@ export default function ChatPage() {
         inputRef.current?.focus();
       }
     },
-    [messages, isLoading, router]
+    [messages, isLoading]
   );
 
   const handleSubmit = useCallback(
@@ -223,6 +223,47 @@ export default function ChatPage() {
             </button>
           </form>
         </div>
+
+        {/* Halloween ghost */}
+        {showGhost && (
+          <div className="fixed inset-0 z-[9999] pointer-events-none overflow-hidden">
+            <div className="absolute animate-ghost-float text-7xl">👻</div>
+            <div
+              className="absolute animate-ghost-float text-5xl"
+              style={{ animationDelay: "0.5s", top: "40%" }}
+            >
+              👻
+            </div>
+            <div
+              className="absolute animate-ghost-float text-6xl"
+              style={{ animationDelay: "1s", top: "60%" }}
+            >
+              👻
+            </div>
+            <style jsx>{`
+              @keyframes ghost-float {
+                0% {
+                  left: -80px;
+                  opacity: 0;
+                }
+                10% {
+                  opacity: 1;
+                }
+                90% {
+                  opacity: 1;
+                }
+                100% {
+                  left: calc(100% + 80px);
+                  opacity: 0;
+                }
+              }
+              .animate-ghost-float {
+                top: 30%;
+                animation: ghost-float 3s ease-in-out both;
+              }
+            `}</style>
+          </div>
+        )}
       </div>
     </div>
   );

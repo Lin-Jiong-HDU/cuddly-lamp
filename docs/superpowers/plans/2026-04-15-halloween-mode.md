@@ -1,3 +1,56 @@
+# Halloween Mode Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Add a Halloween-themed easter egg triggered by saying "邪恶大南瓜" in the chat, leading to a full-screen dark visual show that auto-returns to chat.
+
+**Architecture:** Frontend detects the keyword in chat input, sends the message normally to the AI, then redirects to `/halloween` after the AI response completes. The Halloween page is a self-contained client component with inline SVG + CSS animations following the existing easter egg patterns (F1Racer, OpenSourceMode). System prompt is updated so the AI gives a Halloween-themed response.
+
+**Tech Stack:** Next.js App Router, React client component, inline SVG, CSS @keyframes animations, `<style jsx>` for scoped animation definitions
+
+---
+
+### Task 1: Update System Prompt
+
+**Files:**
+- Modify: `app/api/chat/route.ts:41` (after the "不做的事" section, before the closing backtick)
+
+- [ ] **Step 1: Add Halloween keyword instruction to system prompt**
+
+In `app/api/chat/route.ts`, add the following block inside the `buildSystemPrompt` function's main `sections.push(...)` template literal, right after the "不做的事" section (before the closing backtick on the current line ~41):
+
+```
+## 彩蛋：邪恶大南瓜
+如果有人跟你说"邪恶大南瓜"，你知道这是个秘密暗号。你用万圣节的语气回复，比如"你以为召唤大南瓜很容易？🎃"或者"南瓜大军即将降临..."，简短神秘就行，一两句话够了。
+```
+
+- [ ] **Step 2: Verify in browser**
+
+Open `/chat`, type "邪恶大南瓜", confirm the AI responds with a Halloween-themed short message.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add app/api/chat/route.ts
+git commit -m "feat: add halloween keyword to chat system prompt"
+```
+
+---
+
+### Task 2: Create Halloween Visual Show Page
+
+**Files:**
+- Create: `app/halloween/page.tsx`
+
+This is the core task. The page is a self-contained client component that:
+1. Plays an 8-second visual show on mount
+2. Auto-navigates back to `/chat` when done
+
+- [ ] **Step 1: Create the page file with shell, auto-redirect, and purple fog**
+
+Create `app/halloween/page.tsx` with the following complete content:
+
+```tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -82,17 +135,7 @@ function Bats() {
   );
 }
 
-function Pumpkin({
-  left,
-  top,
-  size,
-  delay,
-}: {
-  left: string;
-  top: string;
-  size: number;
-  delay: number;
-}) {
+function Pumpkin({ left, top, size, delay }: { left: string; top: string; size: number; delay: number }) {
   return (
     <div
       className="absolute animate-pumpkin-fade"
@@ -148,7 +191,9 @@ export default function HalloweenPage() {
   const [phase, setPhase] = useState<"show" | "fadeout">("show");
 
   useEffect(() => {
+    // Start fade-out at 7s
     const fadeTimer = setTimeout(() => setPhase("fadeout"), 7000);
+    // Navigate back at 8s
     const navTimer = setTimeout(() => router.push("/chat"), 8000);
 
     return () => {
@@ -186,12 +231,15 @@ export default function HalloweenPage() {
 
       {/* Central text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="text-6xl mb-4 animate-central-text">🎃</div>
+        <div
+          className="text-6xl mb-4 animate-central-text"
+        >
+          🎃
+        </div>
         <div
           className="font-serif text-3xl text-orange-400 animate-central-text"
           style={{
-            textShadow:
-              "0 0 20px #ff6600, 0 0 40px #ff6600, 0 0 60px #ff6600",
+            textShadow: "0 0 20px #ff6600, 0 0 40px #ff6600, 0 0 60px #ff6600",
             animationDelay: "0.5s",
           }}
         >
@@ -254,13 +302,11 @@ export default function HalloweenPage() {
         }
 
         @keyframes pumpkin-glow {
-          0%,
-          100% {
+          0%, 100% {
             filter: drop-shadow(0 0 10px #ff6600);
           }
           50% {
-            filter: drop-shadow(0 0 25px #ff6600)
-              drop-shadow(0 0 50px #ff6600);
+            filter: drop-shadow(0 0 25px #ff6600) drop-shadow(0 0 50px #ff6600);
           }
         }
         .animate-pumpkin-glow {
@@ -268,8 +314,7 @@ export default function HalloweenPage() {
         }
 
         @keyframes pumpkin-flicker {
-          0%,
-          100% {
+          0%, 100% {
             opacity: 1;
           }
           50% {
@@ -285,16 +330,16 @@ export default function HalloweenPage() {
             transform: translateX(0) scaleX(1);
           }
           25% {
-            transform: translateX(-30vw) scaleX(-1) translateY(-10px);
+            transform: translateX(calc(-30vw)) scaleX(-1) translateY(-10px);
           }
           50% {
-            transform: translateX(-60vw) scaleX(1) translateY(5px);
+            transform: translateX(calc(-60vw)) scaleX(1) translateY(5px);
           }
           75% {
-            transform: translateX(-90vw) scaleX(-1) translateY(-8px);
+            transform: translateX(calc(-90vw)) scaleX(-1) translateY(-8px);
           }
           100% {
-            transform: translateX(-120vw) scaleX(1) translateY(0);
+            transform: translateX(calc(-120vw)) scaleX(1) translateY(0);
           }
         }
         .animate-bat-fly {
@@ -319,3 +364,90 @@ export default function HalloweenPage() {
     </div>
   );
 }
+```
+
+- [ ] **Step 2: Verify in browser**
+
+Navigate directly to `/halloween` in the browser. Confirm:
+- Black screen fades in
+- Purple fog rises from bottom
+- Ghost fire particles float upward (green/blue)
+- Pumpkin lanterns fade in staggered with glowing/flickering eyes and mouth
+- Bats fly across the screen
+- Central "🎃 Happy Halloween" text appears at 4s
+- Everything starts fading at 7s
+- Page redirects back to `/chat` at 8s
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add app/halloween/page.tsx
+git commit -m "feat: add halloween visual show page with SVG animations"
+```
+
+---
+
+### Task 3: Add Keyword Detection and Redirect in Chat Page
+
+**Files:**
+- Modify: `app/chat/page.tsx`
+
+Add keyword detection in the `sendMessage` function. When the user's message contains "邪恶大南瓜", set a ref flag. After AI streaming completes and the response is rendered, trigger redirect to `/halloween` with a 1.5s delay.
+
+- [ ] **Step 1: Add imports and ref**
+
+In `app/chat/page.tsx`, update the import line and add a ref after the existing state declarations.
+
+Change line 3:
+```tsx
+import { useState, useRef, useEffect, useCallback } from "react";
+```
+to:
+```tsx
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+```
+
+Add after the `inputRef` line (after line 11):
+```tsx
+const router = useRouter();
+const halloweenTriggered = useRef(false);
+```
+
+- [ ] **Step 2: Add keyword detection in sendMessage**
+
+Inside the `sendMessage` callback, right after the line `const userMessage: ChatMessage = { role: "user", content: content.trim() };`, add keyword detection:
+
+```tsx
+if (content.includes("邪恶大南瓜")) {
+  halloweenTriggered.current = true;
+}
+```
+
+- [ ] **Step 3: Add redirect after streaming completes**
+
+After the `while` loop for reading the stream (after the `if (reader)` block closes, around the line after `}` that closes the reader loop), and before the `catch` block, add:
+
+```tsx
+// Halloween easter egg redirect
+if (halloweenTriggered.current) {
+  halloweenTriggered.current = false;
+  setTimeout(() => router.push("/halloween"), 1500);
+}
+```
+
+- [ ] **Step 4: Verify end-to-end in browser**
+
+1. Go to `/chat`
+2. Type "邪恶大南瓜" and send
+3. Confirm AI responds with a Halloween-themed message (from system prompt update)
+4. Confirm redirect to `/halloween` happens 1.5s after AI response completes
+5. Confirm Halloween visual show plays and returns to `/chat` at 8s
+6. Also test: send a normal message (without the keyword) and confirm no redirect happens
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add app/chat/page.tsx
+git commit -m "feat: add halloween keyword trigger in chat page"
+```
