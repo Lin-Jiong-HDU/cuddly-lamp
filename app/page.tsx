@@ -1,13 +1,35 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useCallback, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { F1Racer } from "@/components/easter-eggs/F1Racer";
 import { OpenSourceMode } from "@/components/easter-eggs/OpenSourceMode";
 
 export default function Page() {
     const f1TriggerRef = useRef<HTMLSpanElement>(null);
     const openSourceTriggerRef = useRef<HTMLSpanElement>(null);
+    const router = useRouter();
+    const chatClickCount = useRef(0);
+    const chatClickTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const [chatHint, setChatHint] = useState(false);
+
+    const handleChatClick = useCallback(() => {
+        chatClickCount.current++;
+        if (chatClickTimeout.current) clearTimeout(chatClickTimeout.current);
+
+        if (chatClickCount.current >= 7) {
+            chatClickCount.current = 0;
+            router.push("/chat");
+        } else if (chatClickCount.current >= 4) {
+            setChatHint(true);
+        }
+
+        chatClickTimeout.current = setTimeout(() => {
+            chatClickCount.current = 0;
+            setChatHint(false);
+        }, 1500);
+    }, [router]);
 
     return (
         <>
@@ -26,7 +48,17 @@ export default function Page() {
 
                 {/* Subtitle - Split for separate triggers */}
                 <p className="text-lg md:text-xl text-[var(--color-text-secondary)] mb-4 opacity-0 animate-fade-in-up delay-200">
-                    <span className="text-[var(--color-text-muted)]">大学生 / </span>
+                    <span
+                        onClick={handleChatClick}
+                        className={`cursor-default select-none transition-colors ${
+                            chatHint
+                                ? "text-[var(--color-accent)]"
+                                : "text-[var(--color-text-muted)]"
+                        }`}
+                    >
+                        大学生
+                    </span>
+                    <span className="text-[var(--color-text-muted)]"> / </span>
                     <span
                         ref={openSourceTriggerRef}
                         className="cursor-default select-none hover:text-[var(--color-accent)] transition-colors"
