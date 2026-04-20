@@ -36,9 +36,28 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const post = getPostBySlug(slug);
   if (!post) return { title: "文章未找到" };
+
+  const url = `https://johnlin.top/blog/${post.slug}`;
+
   return {
     title: `${post.title} | JohnLin 的博客`,
     description: post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: "article",
+      publishedTime: post.date,
+      tags: post.tags,
+      url,
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title: post.title,
+      description: post.excerpt,
+    },
+    alternates: {
+      canonical: url,
+    },
   };
 }
 
@@ -54,8 +73,27 @@ export default async function PostPage({ params }: Props) {
   const contentHtml = addHeadingIds(rawHtml);
   const headings = extractHeadings(contentHtml);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    author: {
+      "@type": "Person",
+      name: "JohnLin",
+      url: "https://johnlin.top",
+    },
+    keywords: post.tags.join(", "),
+    url: `https://johnlin.top/blog/${post.slug}`,
+  };
+
   return (
     <div className="min-h-screen pt-32 pb-20 px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-6xl mx-auto">
         <div className="flex gap-12">
           {/* Main content */}
