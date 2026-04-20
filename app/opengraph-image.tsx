@@ -32,7 +32,7 @@ export default function Image() {
 						marginBottom: 32,
 					}}
 				>
-					<span style={{ fontSize: 40, color: "white" }}>J</span>
+					<span style={{ fontSize: 40, color: "white" }}>{"J"}</span>
 				</div>
 				<div
 					style={{
@@ -40,11 +40,14 @@ export default function Image() {
 						fontWeight: 700,
 						color: "white",
 						marginBottom: 16,
+						display: "flex",
 					}}
 				>
-					JohnLin 的博客
+					{"JohnLin 的博客"}
 				</div>
-				<div style={{ fontSize: 24, color: "#94a3b8" }}>技术学习与思考</div>
+				<div style={{ fontSize: 24, color: "#94a3b8", display: "flex" }}>
+					{"技术学习与思考"}
+				</div>
 			</div>
 		),
 		{ ...size },

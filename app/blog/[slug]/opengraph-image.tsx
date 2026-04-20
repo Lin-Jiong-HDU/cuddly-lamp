@@ -64,13 +64,12 @@ export default async function Image({ params }: Props) {
               fontWeight: 700,
               color: "white",
               lineHeight: 1.3,
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
+              display: "flex",
+              maxWidth: 1060,
               overflow: "hidden",
             }}
           >
-            {title}
+            {title.length > 30 ? title.slice(0, 30) + "…" : title}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 8 }}>
             <div
@@ -89,7 +88,7 @@ export default async function Image({ params }: Props) {
             >
               J
             </div>
-            <div style={{ fontSize: 22, color: "#94a3b8" }}>JohnLin · {date}</div>
+            <div style={{ fontSize: 22, color: "#94a3b8" }}>{`JohnLin · ${date}`}</div>
           </div>
         </div>
       </div>
