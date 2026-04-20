@@ -46,10 +46,15 @@ const mesloLGS = localFont({
 	display: "swap",
 });
 
+const SITE_URL = "https://johnlin.top";
+
 export const metadata: Metadata = {
-	metadataBase: new URL("https://johnlin.top"),
+	metadataBase: new URL(SITE_URL),
 	title: "JohnLin 的博客",
 	description: "一名热爱技术与开源的大学生，记录技术学习与思考",
+	alternates: {
+		canonical: "/",
+	},
 	openGraph: {
 		siteName: "JohnLin 的博客",
 		locale: "zh_CN",
@@ -70,17 +75,17 @@ function JsonLd() {
 		"@graph": [
 			{
 				"@type": "WebSite",
-				"@id": "https://johnlin.top/#website",
-				url: "https://johnlin.top",
+				"@id": `${SITE_URL}/#website`,
+				url: SITE_URL,
 				name: "JohnLin 的博客",
 				description: "一名热爱技术与开源的大学生，记录技术学习与思考",
 				inLanguage: "zh-CN",
 			},
 			{
 				"@type": "Person",
-				"@id": "https://johnlin.top/#person",
+				"@id": `${SITE_URL}/#person`,
 				name: "JohnLin",
-				url: "https://johnlin.top",
+				url: SITE_URL,
 			},
 		],
 	};
