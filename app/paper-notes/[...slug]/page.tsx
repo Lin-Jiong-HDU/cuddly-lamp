@@ -32,10 +32,35 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const note = getPaperNoteBySlug(slug.join('/'));
+  const note = getPaperNoteBySlug(slug.join("/"));
   if (!note) return { title: "笔记未找到" };
+
+  const description = note.content
+    .replace(/^#+\s+.*$/gm, "")
+    .replace(/[\n\r]+/g, " ")
+    .trim()
+    .slice(0, 160);
+
+  const url = `https://johnlin.top/paper-notes/${note.slug}`;
+
   return {
     title: `${note.title} | JohnLin 的论文笔记`,
+    description,
+    openGraph: {
+      title: note.title,
+      description,
+      type: "article",
+      publishedTime: note.date,
+      url,
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title: note.title,
+      description,
+    },
+    alternates: {
+      canonical: url,
+    },
   };
 }
 
@@ -51,8 +76,25 @@ export default async function PaperNotePage({ params }: Props) {
   const contentHtml = addHeadingIds(rawHtml);
   const headings = extractHeadings(contentHtml);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: note.title,
+    datePublished: note.date,
+    author: {
+      "@type": "Person",
+      name: "JohnLin",
+      url: "https://johnlin.top",
+    },
+    url: `https://johnlin.top/paper-notes/${note.slug}`,
+  };
+
   return (
     <div className="min-h-screen pt-32 pb-20 px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-6xl mx-auto">
         <div className="flex gap-12">
           {/* Main content */}
