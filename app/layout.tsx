@@ -47,9 +47,50 @@ const mesloLGS = localFont({
 });
 
 export const metadata: Metadata = {
+	metadataBase: new URL("https://johnlin.top"),
 	title: "JohnLin 的博客",
 	description: "一名热爱技术与开源的大学生，记录技术学习与思考",
+	openGraph: {
+		siteName: "JohnLin 的博客",
+		locale: "zh_CN",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+	},
+	robots: {
+		index: true,
+		follow: true,
+	},
 };
+
+function JsonLd() {
+	const schema = {
+		"@context": "https://schema.org",
+		"@graph": [
+			{
+				"@type": "WebSite",
+				"@id": "https://johnlin.top/#website",
+				url: "https://johnlin.top",
+				name: "JohnLin 的博客",
+				description: "一名热爱技术与开源的大学生，记录技术学习与思考",
+				inLanguage: "zh-CN",
+			},
+			{
+				"@type": "Person",
+				"@id": "https://johnlin.top/#person",
+				name: "JohnLin",
+				url: "https://johnlin.top",
+			},
+		],
+	};
+	return (
+		<script
+			type="application/ld+json"
+			dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+		/>
+	);
+}
 
 export default function RootLayout({
 	children,
@@ -59,6 +100,7 @@ export default function RootLayout({
 	return (
 		<html lang="zh-CN" suppressHydrationWarning>
 			<body className={`${dmSans.variable} ${crimsonPro.variable} ${mesloLGS.variable}`}>
+				<JsonLd />
 				<ThemeProvider>
 					<EasterEggManager />
 					<div className="min-h-screen flex flex-col">
