@@ -3,7 +3,7 @@
 import GameCard from "./components/GameCard";
 import type { GameId } from "@/lib/games";
 
-const games: GameId[] = ["snake", "minesweeper", "tetris"];
+const games: GameId[] = ["snake", "minesweeper", "tetris", "fc"];
 
 export default function GamesPage() {
   return (
@@ -20,7 +20,7 @@ export default function GamesPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl w-full">
         {games.map((gameId, index) => (
           <GameCard key={gameId} gameId={gameId} index={index} />
         ))}

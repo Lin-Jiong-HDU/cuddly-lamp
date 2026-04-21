@@ -14,7 +14,7 @@ export interface ScoreSubmission {
   duration: number;
 }
 
-export type GameId = "snake" | "minesweeper" | "tetris";
+export type GameId = "snake" | "minesweeper" | "tetris" | "fc";
 export type MinesweeperDifficulty = "beginner" | "intermediate" | "expert";
 
 export const GAME_INFO: Record<
@@ -35,6 +35,11 @@ export const GAME_INFO: Record<
     name: "俄罗斯方块",
     description: "旋转、堆叠、消行，永不过时",
     icon: "🧱",
+  },
+  fc: {
+    name: "FC 模拟器",
+    description: "内置塞尔达传说，支持上传 ROM",
+    icon: "🎮",
   },
 };
 
