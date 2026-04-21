@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -14,6 +14,7 @@ const navItems = [
 
 export function Navigation() {
 	const pathname = usePathname();
+	const router = useRouter();
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [logoSpinning, setLogoSpinning] = useState(false);
 	const clickCountRef = useRef(0);
@@ -37,13 +38,29 @@ export function Navigation() {
 				setLogoSpinning(true);
 				clickCountRef.current = 0;
 				setTimeout(() => setLogoSpinning(false), 1000);
+
+				// Games easter egg: toast + navigate
+				const toast = document.createElement("div");
+				toast.textContent = "🎮 发现了游戏室！";
+				toast.style.cssText = `
+					position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+					z-index: 9999; padding: 12px 24px; border-radius: 12px;
+					background: var(--color-surface); border: 1px solid var(--color-accent);
+					color: var(--color-text); font-size: 14px;
+					animation: fadeInUp 0.3s ease-out;
+				`;
+				document.body.appendChild(toast);
+				setTimeout(() => {
+					toast.remove();
+					router.push("/games");
+				}, 1200);
 			} else {
 				timeoutRef.current = setTimeout(() => {
 					clickCountRef.current = 0;
 				}, 500);
 			}
 		}
-	}, [pathname]);
+	}, [pathname, router]);
 
 	return (
 		<header
