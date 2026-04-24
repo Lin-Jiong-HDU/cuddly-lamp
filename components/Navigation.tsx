@@ -22,6 +22,9 @@ export function Navigation() {
 	const clickCountRef = useRef(0);
 	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+	const isActiveRoute = (href: string) =>
+		href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
+
 	useEffect(() => {
 		const handleScroll = () => {
 			setIsScrolled(window.scrollY > 20);
@@ -39,6 +42,19 @@ export function Navigation() {
 		return () => {
 			document.body.style.overflow = "";
 		};
+	}, [isMobileMenuOpen]);
+
+	useEffect(() => {
+		setIsMobileMenuOpen(false);
+	}, [pathname]);
+
+	useEffect(() => {
+		if (!isMobileMenuOpen) return;
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === "Escape") setIsMobileMenuOpen(false);
+		};
+		document.addEventListener("keydown", handleKeyDown);
+		return () => document.removeEventListener("keydown", handleKeyDown);
 	}, [isMobileMenuOpen]);
 
 	const handleLogoClick = useCallback((e: React.MouseEvent) => {
@@ -101,7 +117,7 @@ export function Navigation() {
 					<div className="flex items-center gap-8">
 						<ul className="hidden md:flex items-center gap-8">
 							{navItems.map((item) => {
-								const isActive = item.href === "/" ? pathname === "/" : pathname === item.href || pathname.startsWith(item.href + "/");
+								const isActive = isActiveRoute(item.href);
 								return (
 								<li key={item.href}>
 									<Link
@@ -150,7 +166,7 @@ export function Navigation() {
 
 			{/* Full-screen mobile overlay */}
 			{isMobileMenuOpen && (
-				<div className="fixed inset-0 z-40 bg-[var(--color-background)] md:hidden flex flex-col">
+				<div className="fixed inset-0 z-40 bg-[var(--color-background)] md:hidden flex flex-col" role="dialog" aria-modal="true" aria-label="Navigation menu">
 					{/* Close button */}
 					<div className="flex justify-end px-6 py-6">
 						<button
@@ -168,7 +184,7 @@ export function Navigation() {
 					{/* Centered nav links */}
 					<div className="flex-1 flex flex-col items-center justify-center gap-8">
 						{navItems.map((item) => {
-							const isActive = item.href === "/" ? pathname === "/" : pathname === item.href || pathname.startsWith(item.href + "/");
+							const isActive = isActiveRoute(item.href);
 							return (
 								<Link
 									key={item.href}
