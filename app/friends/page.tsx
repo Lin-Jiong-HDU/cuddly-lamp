@@ -4,6 +4,19 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
 	title: "友链 · JohnLin",
 	description: "我的友情链接",
+	openGraph: {
+		title: "友链 · JohnLin",
+		description: "我的友情链接",
+		url: "https://johnlin.top/friends",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "友链 · JohnLin",
+		description: "我的友情链接",
+	},
+	alternates: {
+		canonical: "https://johnlin.top/friends",
+	},
 };
 
 export default function FriendsPage() {

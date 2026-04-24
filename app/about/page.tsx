@@ -2,6 +2,25 @@ import GitHubCalendar from "./github-calendar";
 import GitHubActivity from "./github-activity";
 import GitHubLanguages from "./github-languages";
 import { friends } from "@/lib/friends";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "关于 | JohnLin",
+	description: "我的技术栈、项目经历与学习历程。后端开发、开源爱好者。",
+	openGraph: {
+		title: "关于 | JohnLin",
+		description: "我的技术栈、项目经历与学习历程",
+		url: "https://johnlin.top/about",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "关于 | JohnLin",
+		description: "我的技术栈、项目经历与学习历程",
+	},
+	alternates: {
+		canonical: "https://johnlin.top/about",
+	},
+};
 
 export default function AboutPage() {
 	return (

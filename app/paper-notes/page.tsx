@@ -1,5 +1,24 @@
 import Link from "next/link";
 import { getAllPaperNotes } from "@/lib/paper-notes";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "论文笔记 | JohnLin",
+	description: "阅读论文的记录与思考",
+	openGraph: {
+		title: "论文笔记 | JohnLin",
+		description: "阅读论文的记录与思考",
+		url: "https://johnlin.top/paper-notes",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "论文笔记 | JohnLin",
+		description: "阅读论文的记录与思考",
+	},
+	alternates: {
+		canonical: "https://johnlin.top/paper-notes",
+	},
+};
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);

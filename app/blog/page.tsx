@@ -1,5 +1,24 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "技术博客 | JohnLin",
+	description: "后端开发、开源项目、黑客松心得与技术思考",
+	openGraph: {
+		title: "技术博客 | JohnLin",
+		description: "后端开发、开源项目、黑客松心得与技术思考",
+		url: "https://johnlin.top/blog",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "技术博客 | JohnLin",
+		description: "后端开发、开源项目、黑客松心得与技术思考",
+	},
+	alternates: {
+		canonical: "https://johnlin.top/blog",
+	},
+};
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
