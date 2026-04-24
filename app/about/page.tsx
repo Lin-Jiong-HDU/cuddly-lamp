@@ -1,6 +1,7 @@
 import GitHubCalendar from "./github-calendar";
 import GitHubActivity from "./github-activity";
 import GitHubLanguages from "./github-languages";
+import { friends } from "@/lib/friends";
 
 export default function AboutPage() {
 	return (
@@ -150,6 +151,49 @@ export default function AboutPage() {
 						))}
 					</div>
 				</section>
+
+				{/* Friends */}
+				{friends.length > 0 && (
+					<section className="mt-20 opacity-0 animate-fade-in-up delay-500">
+						<div className="flex items-center gap-4 mb-8">
+							<div className="w-12 h-px bg-[var(--color-accent)]" />
+							<span className="text-sm tracking-widest text-[var(--color-text-muted)] uppercase">
+								Links
+							</span>
+						</div>
+						<h2 className="font-serif text-2xl text-[var(--color-text)] mb-8">
+							友情链接
+						</h2>
+						<div className="space-y-4">
+							{friends.map((friend) => (
+								<a
+									key={friend.url}
+									href={friend.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="block p-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg hover:border-[var(--color-accent)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all group"
+								>
+									<div className="flex items-center gap-5">
+										<div className="w-10 h-10 rounded-full bg-[var(--color-border)] flex items-center justify-center shrink-0 text-[var(--color-text-muted)] font-serif text-base group-hover:bg-[var(--color-accent)] group-hover:text-white transition-colors">
+											{friend.name.charAt(0)}
+										</div>
+										<div className="min-w-0">
+											<h3 className="font-serif text-lg text-[var(--color-text)] group-hover:text-[var(--color-accent-dark)] transition-colors">
+												{friend.name}
+											</h3>
+											<p className="text-sm text-[var(--color-text-muted)] truncate">
+												{friend.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
+											</p>
+										</div>
+										<p className="ml-auto text-sm text-[var(--color-text-secondary)] hidden sm:block">
+											{friend.description}
+										</p>
+									</div>
+								</a>
+							))}
+						</div>
+					</section>
+				)}
 
 				{/* Decorative */}
 				<div className="mt-20 flex justify-center opacity-0 animate-fade-in delay-600">
