@@ -31,6 +31,8 @@ export default function MinesweeperPage() {
   const [flagCount, setFlagCount] = useState(0);
   const [showScoreSubmit, setShowScoreSubmit] = useState(false);
   const [firstClick, setFirstClick] = useState(true);
+  const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isLongPressing, setIsLongPressing] = useState(false);
 
   const timerRef = useRef<ReturnType<typeof setInterval>>(undefined);
 
@@ -238,6 +240,22 @@ export default function MinesweeperPage() {
     [board, gameState, config.rows, config.cols, reveal, checkWin]
   );
 
+  const handleTouchStart = useCallback((row: number, col: number) => {
+    longPressTimerRef.current = setTimeout(() => {
+      setIsLongPressing(true);
+      const fakeEvent = { preventDefault: () => {} } as React.MouseEvent;
+      handleRightClick(fakeEvent, row, col);
+    }, 500);
+  }, [handleRightClick]);
+
+  const handleTouchEnd = useCallback(() => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+    setIsLongPressing(false);
+  }, []);
+
   const handleDifficultyChange = useCallback((d: MinesweeperDifficulty) => {
     setDifficulty(d);
   }, []);
@@ -283,9 +301,12 @@ export default function MinesweeperPage() {
               <button
                 key={`${r}-${c}`}
                 onClick={() =>
-                  cell.revealed ? handleChordClick(r, c) : handleLeftClick(r, c)
+                  !isLongPressing && (cell.revealed ? handleChordClick(r, c) : handleLeftClick(r, c))
                 }
                 onContextMenu={(e) => handleRightClick(e, r, c)}
+                onTouchStart={() => handleTouchStart(r, c)}
+                onTouchEnd={handleTouchEnd}
+                onTouchCancel={handleTouchEnd}
                 className="flex items-center justify-center font-mono text-sm font-bold transition-colors select-none"
                 style={{
                   width: cellSize,
@@ -309,7 +330,8 @@ export default function MinesweeperPage() {
         </div>
 
         <p className="text-xs text-[var(--color-text-muted)]">
-          左键揭开 · 右键插旗 · 双击数字自动揭开
+          <span className="hidden sm:inline">左键揭开 · 右键插旗 · 双击数字自动揭开</span>
+          <span className="sm:hidden">点击揭开 · 长按插旗</span>
         </p>
       </div>
 

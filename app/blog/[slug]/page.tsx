@@ -6,6 +6,7 @@ import html from "remark-html";
 import gfm from "remark-gfm";
 import { extractHeadings, addHeadingIds, type TOCItem } from "@/lib/toc";
 import { TableOfContents } from "@/components/TableOfContents";
+import { MobileTOC } from "@/components/MobileTOC";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -171,6 +172,7 @@ export default async function PostPage({ params }: Props) {
           )}
         </div>
       </div>
+      {headings.length > 0 && <MobileTOC items={headings} />}
     </div>
   );
 }

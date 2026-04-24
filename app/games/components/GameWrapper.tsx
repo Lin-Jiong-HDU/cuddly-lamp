@@ -65,9 +65,10 @@ export default function GameWrapper({
               ))}
             </div>
           )}
+          {/* Desktop leaderboard button */}
           <button
             onClick={() => setShowLeaderboard(!showLeaderboard)}
-            className={`px-3 py-1.5 rounded-full text-xs transition-colors border ${
+            className={`hidden md:inline-flex px-3 py-1.5 rounded-full text-xs transition-colors border ${
               showLeaderboard
                 ? "border-[var(--color-accent)] text-[var(--color-accent)]"
                 : "border-[var(--color-border)] text-[var(--color-text-muted)] hover:border-[var(--color-accent)]"
@@ -75,19 +76,40 @@ export default function GameWrapper({
           >
             排行榜
           </button>
+          {/* Mobile leaderboard button */}
+          <button
+            onClick={() => setShowLeaderboard(!showLeaderboard)}
+            className={`md:hidden px-3 py-1.5 rounded-full text-xs transition-colors border ${
+              showLeaderboard
+                ? "border-[var(--color-accent)] text-[var(--color-accent)]"
+                : "border-[var(--color-border)] text-[var(--color-text-muted)] hover:border-[var(--color-accent)]"
+            }`}
+          >
+            排行
+          </button>
         </div>
       </div>
 
       {/* Main area */}
-      <div className="flex-1 flex">
+      <div className="flex-1 flex flex-col md:flex-row">
         {/* Game canvas area */}
         <div className="flex-1 flex items-center justify-center p-4">
           {children}
         </div>
 
-        {/* Right sidebar: optional game info + leaderboard */}
+        {/* Mobile leaderboard section: below game area */}
         {(showLeaderboard || sidebar) && (
-          <div className="w-72 border-l border-[var(--color-border)] p-4 overflow-y-auto space-y-6">
+          <div className="md:hidden border-t border-[var(--color-border)] p-4 space-y-6">
+            {sidebar}
+            {showLeaderboard && (
+              <Leaderboard game={game} difficulty={difficulty} />
+            )}
+          </div>
+        )}
+
+        {/* Desktop right sidebar: optional game info + leaderboard */}
+        {(showLeaderboard || sidebar) && (
+          <div className="hidden md:block w-72 border-l border-[var(--color-border)] p-4 overflow-y-auto space-y-6">
             {sidebar}
             {showLeaderboard && (
               <Leaderboard game={game} difficulty={difficulty} />

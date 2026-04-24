@@ -169,7 +169,7 @@ export default function ChatPage() {
 
         {/* Chat Area */}
         <div className="card rounded-lg opacity-0 animate-fade-in-up delay-300">
-          <div className="h-[500px] overflow-y-auto p-6 space-y-4">
+          <div className="h-[60vh] min-h-[300px] max-h-[600px] overflow-y-auto p-6 space-y-4">
             {messages.length === 0 && (
               <div className="flex items-center justify-center h-full text-[var(--color-text-muted)] text-sm">
                 发送一条消息开始对话
