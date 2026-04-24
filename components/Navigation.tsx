@@ -18,6 +18,7 @@ export function Navigation() {
 	const router = useRouter();
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [logoSpinning, setLogoSpinning] = useState(false);
+	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const clickCountRef = useRef(0);
 	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -28,6 +29,17 @@ export function Navigation() {
 		window.addEventListener("scroll", handleScroll);
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
+
+	useEffect(() => {
+		if (isMobileMenuOpen) {
+			document.body.style.overflow = "hidden";
+		} else {
+			document.body.style.overflow = "";
+		}
+		return () => {
+			document.body.style.overflow = "";
+		};
+	}, [isMobileMenuOpen]);
 
 	const handleLogoClick = useCallback((e: React.MouseEvent) => {
 		// Only trigger easter egg on same page (prevent navigation interference)
@@ -87,7 +99,7 @@ export function Navigation() {
 					</Link>
 
 					<div className="flex items-center gap-8">
-						<ul className="flex items-center gap-8">
+						<ul className="hidden md:flex items-center gap-8">
 							{navItems.map((item) => {
 								const isActive = item.href === "/" ? pathname === "/" : pathname === item.href || pathname.startsWith(item.href + "/");
 								return (
@@ -109,10 +121,80 @@ export function Navigation() {
 							)})}
 						</ul>
 
-						<ThemeToggle />
+						<div className="hidden md:block">
+							<ThemeToggle />
+						</div>
+
+						{/* Mobile hamburger button */}
+						<button
+							className="md:hidden p-2 text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
+							onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+							aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+						>
+							{isMobileMenuOpen ? (
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+									<line x1="18" y1="6" x2="6" y2="18" />
+									<line x1="6" y1="6" x2="18" y2="18" />
+								</svg>
+							) : (
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+									<line x1="3" y1="6" x2="21" y2="6" />
+									<line x1="3" y1="12" x2="21" y2="12" />
+									<line x1="3" y1="18" x2="21" y2="18" />
+								</svg>
+							)}
+						</button>
 					</div>
 				</div>
 			</nav>
+
+			{/* Full-screen mobile overlay */}
+			{isMobileMenuOpen && (
+				<div className="fixed inset-0 z-40 bg-[var(--color-background)] md:hidden flex flex-col">
+					{/* Close button */}
+					<div className="flex justify-end px-6 py-6">
+						<button
+							onClick={() => setIsMobileMenuOpen(false)}
+							className="p-2 text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
+							aria-label="Close menu"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+								<line x1="18" y1="6" x2="6" y2="18" />
+								<line x1="6" y1="6" x2="18" y2="18" />
+							</svg>
+						</button>
+					</div>
+
+					{/* Centered nav links */}
+					<div className="flex-1 flex flex-col items-center justify-center gap-8">
+						{navItems.map((item) => {
+							const isActive = item.href === "/" ? pathname === "/" : pathname === item.href || pathname.startsWith(item.href + "/");
+							return (
+								<Link
+									key={item.href}
+									href={item.href}
+									onClick={() => setIsMobileMenuOpen(false)}
+									className={`font-serif text-2xl tracking-wide transition-colors ${
+										isActive
+											? "text-[var(--color-text)]"
+											: "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+									}`}
+								>
+									{item.label}
+									{isActive && (
+										<span className="block mt-1 mx-auto w-8 h-px bg-[var(--color-accent)]" />
+									)}
+								</Link>
+							);
+						})}
+					</div>
+
+					{/* Theme toggle at bottom */}
+					<div className="flex justify-center pb-8">
+						<ThemeToggle />
+					</div>
+				</div>
+			)}
 
 			{/* Logo spin animation */}
 			<style jsx global>{`
