@@ -29,6 +29,6 @@ tags: ["日志", "小记", "日常", "实验", "创业"]
 
 试了下F1 25跑一个完整的比赛，正赛跑了50圈，给我跑累死了。
 
-![F1](images/racing.jpg)
+![F1](/images/racing.jpg)
 
-![F1](images/racinglist.jpg)
+![F1](/images/racinglist.jpg)

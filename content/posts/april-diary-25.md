@@ -13,8 +13,8 @@ tags: ["日记", "天气", "骑行"]
 
 ## 照片附上
 
-![骑行记录0](images/IMG_4381.jpg)
+![骑行记录0](/images/IMG_4381.jpg)
 
-![骑行记录1](images/IMG_4383.jpg)
+![骑行记录1](/images/IMG_4383.jpg)
 
-![骑行记录2](images/IMG_4385.jpg)
+![骑行记录2](/images/IMG_4385.jpg)
