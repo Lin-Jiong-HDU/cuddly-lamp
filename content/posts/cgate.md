@@ -1,7 +1,7 @@
 ---
 title: "[项目解析] cgate：Claude Code 自动化流水线，从Issue到PR"
 date: "2026-05-03"
-excerpt: "cgate是一个自动化流水线项目，旨在将Github项目的Issue发送到Claude Code中进行处理，并最终生成PR。项目核心是两个Docker镜像，使用GitHub Actions监听Issue事件，通过Webhook发送到CGate，CGate负责处理事件并与Claude Code交互。整个系统架构采用Clean Architecture设计原则，使用Go语言编写后端服务，Docker管理运行环境，SQLite存储数据。项目的核心理念是让Claude Code处理所有核心功能，尽可能减少人工参与，提高研发效率。"
+excerpt: "cgate是一个自动化流水线项目，旨在将Github项目的Issue发送到Claude Code中进行处理，并最终生成PR。"
 tags: ["项目解析", "AI", "Docker", "Claude Code", "开源", "项目"]
 ---
 
