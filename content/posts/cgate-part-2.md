@@ -5,7 +5,7 @@ excerpt: "之前讲的太仓促了，没有提到如何部署和使用这个项�
 tags: ["项目解析", "教程", "Docker", "Claude Code", "开源", "项目"]
 ---
 
-!["readme"]("/images/cgate.png")
+!["readme"](/images/cgate.png)
 
 ## 部署指南
 
