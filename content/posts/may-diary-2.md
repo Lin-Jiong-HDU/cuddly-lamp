@@ -11,7 +11,7 @@ tags: ["日志", "假期", "骑行", "日常"]
 
 昨天刚刚去骑完车，控制心率在第二区间。比较适合燃脂，多运动感觉人的精神状态都变好了。
 
-![截图]("/images/IMG_4433.png")
+![截图](/images/IMG_4433.png)
 
 四月的总骑行量是324.49km，可能是雨水太多了，骑行量有点少。
 
@@ -27,4 +27,4 @@ tags: ["日志", "假期", "骑行", "日常"]
 
 修改了一个700 stars项目的代码，发起了pr，期待merge哈哈。
 
-[github pr]("https://github.com/GAIR-NLP/DeepResearcher/pull/29")
+[github pr](https://github.com/GAIR-NLP/DeepResearcher/pull/29)
