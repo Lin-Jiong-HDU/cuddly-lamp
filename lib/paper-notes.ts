@@ -1,92 +1,86 @@
 import fs from 'fs'
 import path from 'path'
 
-const paperNotesDirectory = path.join(process.cwd(), 'content/paper-notes')
+const papersDirectory = path.join(process.cwd(), 'vendor/paper-repository/papers')
 
 export interface PaperNote {
   slug: string
   title: string
+  authors: string
   date: string
-  category: string
-  content: string
+  arxivId: string
+  arxivUrl: string
+  keywords: string[]
+  summary: string
 }
 
-export interface PaperNoteMeta {
-  slug: string
-  title: string
-  date: string
-  category: string
-}
+function parseNotesMarkdown(content: string, arxivId: string): PaperNote | null {
+  // Extract fields from the "基本信息" section
+  const titleMatch = content.match(/- \*\*标题\*\*:\s*(.+)/)
+  const authorsMatch = content.match(/- \*\*作者\*\*:\s*(.+)/)
+  const dateMatch = content.match(/- \*\*发表日期\*\*:\s*(.+)/)
+  const arxivUrlMatch = content.match(/- \*\*arXiv 链接\*\*:\s*<([^>]+)>/)
+  const keywordsMatch = content.match(/- \*\*领域\/关键词\*\*:\s*(.+)/)
 
-function extractTitle(content: string, fallback: string): string {
-  const headingMatch = content.match(/^#{1,2}\s+(.+)$/m)
-  if (headingMatch) return headingMatch[1].trim()
-  const firstLine = content.split('\n').find(line => line.trim().length > 0)
-  if (firstLine) {
-    const clean = firstLine.replace(/^#+\s*/, '').trim()
-    if (clean.length <= 200) return clean
-  }
-  return fallback
-}
+  // Extract summary from the quote block under "一句话总结"
+  const summaryMatch = content.match(
+    /## 一句话总结\s*\n>\s*\n>\s*(.+)/
+  )
 
-function getPaperNoteSlugs(): string[] {
-  if (!fs.existsSync(paperNotesDirectory)) {
-    return []
-  }
-
-  const slugs: string[] = []
-
-  function walk(dir: string) {
-    const entries = fs.readdirSync(dir, { withFileTypes: true })
-    for (const entry of entries) {
-      const fullPath = path.join(dir, entry.name)
-      if (entry.isDirectory()) {
-        walk(fullPath)
-      } else if (entry.isFile() && entry.name.endsWith('.md')) {
-        slugs.push(path.relative(paperNotesDirectory, fullPath).replace(/\.md$/, ''))
-      }
-    }
-  }
-
-  walk(paperNotesDirectory)
-  return slugs
-}
-
-function getPaperNoteBySlug(slug: string): PaperNote | null {
-  const fullPath = path.join(paperNotesDirectory, `${slug}.md`)
-
-  if (!fs.existsSync(fullPath)) {
+  if (!titleMatch || !dateMatch) {
     return null
   }
 
-  const content = fs.readFileSync(fullPath, 'utf8')
-  const stat = fs.statSync(fullPath)
-
-  // category from directory: "env/AutoForge" -> "env"
-  const category = path.dirname(slug) !== '.' ? path.dirname(slug) : ''
+  // Keywords can be separated by Chinese comma 、 or regular comma ,
+  const keywordsRaw = keywordsMatch ? keywordsMatch[1].trim() : ''
+  const keywords = keywordsRaw
+    ? keywordsRaw.split(/[、,]/).map(k => k.trim()).filter(k => k.length > 0)
+    : []
 
   return {
-    slug,
-    title: extractTitle(content, path.basename(slug)),
-    date: stat.mtime.toISOString(),
-    category,
-    content,
+    slug: arxivId,
+    title: titleMatch[1].trim(),
+    authors: authorsMatch ? authorsMatch[1].trim() : '',
+    date: dateMatch[1].trim(),
+    arxivId,
+    arxivUrl: arxivUrlMatch ? arxivUrlMatch[1].trim() : '',
+    keywords,
+    summary: summaryMatch ? summaryMatch[1].trim() : '',
   }
 }
 
-function getAllPaperNotes(): PaperNoteMeta[] {
-  const slugs = getPaperNoteSlugs()
-  const notes = slugs
-    .map(slug => getPaperNoteBySlug(slug))
-    .filter((note): note is PaperNote => note !== null)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+function getArxivIds(): string[] {
+  if (!fs.existsSync(papersDirectory)) {
+    return []
+  }
 
-  return notes.map(({ slug, title, date, category }) => ({
-    slug,
-    title,
-    date,
-    category,
-  }))
+  return fs
+    .readdirSync(papersDirectory, { withFileTypes: true })
+    .filter(
+      (entry) =>
+        entry.isDirectory() &&
+        fs.existsSync(path.join(papersDirectory, entry.name, 'notes.md'))
+    )
+    .map((entry) => entry.name)
 }
 
-export { getPaperNoteSlugs, getPaperNoteBySlug, getAllPaperNotes }
+function getPaperNoteByArxivId(arxivId: string): PaperNote | null {
+  const notesPath = path.join(papersDirectory, arxivId, 'notes.md')
+
+  if (!fs.existsSync(notesPath)) {
+    return null
+  }
+
+  const content = fs.readFileSync(notesPath, 'utf8')
+  return parseNotesMarkdown(content, arxivId)
+}
+
+function getAllPaperNotes(): PaperNote[] {
+  const ids = getArxivIds()
+  return ids
+    .map((id) => getPaperNoteByArxivId(id))
+    .filter((note): note is PaperNote => note !== null)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+}
+
+export { getAllPaperNotes, getPaperNoteByArxivId, getArxivIds }
