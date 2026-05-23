@@ -6,6 +6,7 @@ import { Navigation } from "@/components/Navigation";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { EasterEggManager } from "@/components/easter-eggs/EasterEggManager";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 const dmSans = DM_Sans({
 	subsets: ["latin"],
@@ -117,6 +118,7 @@ export default function RootLayout({
 					</div>
 				</ThemeProvider>
 				<SpeedInsights />
+				<Analytics />
 			</body>
 		</html>
 	);
