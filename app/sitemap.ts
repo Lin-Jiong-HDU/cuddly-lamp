@@ -5,19 +5,23 @@ import { getAllPaperNotes } from "@/lib/paper-notes";
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://johnlin.top";
 
-  const posts = getAllPosts().map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
+  const posts = getAllPosts()
+    .filter((post) => !isNaN(new Date(post.date).getTime()))
+    .map((post) => ({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.date),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    }));
 
-  const notes = getAllPaperNotes().map((note) => ({
-    url: `${baseUrl}/paper-notes/${note.slug}`,
-    lastModified: new Date(note.date),
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }));
+  const notes = getAllPaperNotes()
+    .filter((note) => !isNaN(new Date(note.date).getTime()))
+    .map((note) => ({
+      url: `${baseUrl}/paper-notes/${note.slug}`,
+      lastModified: new Date(note.date),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }));
 
   return [
     {
