@@ -14,6 +14,18 @@ export interface PaperNote {
   summary: string
 }
 
+function normalizeDate(raw: string): string {
+  // "2026年3月4日" | "2025年7月" | "2026年4月" -> "2026-03-04"
+  const chineseMatch = raw.match(/^(\d{4})年(\d{1,2})月(\d{1,2})?日?$/)
+  if (chineseMatch) {
+    const y = chineseMatch[1]
+    const m = chineseMatch[2].padStart(2, '0')
+    const d = chineseMatch[3] ? chineseMatch[3].padStart(2, '0') : '01'
+    return `${y}-${m}-${d}`
+  }
+  return raw
+}
+
 function parseNotesMarkdown(content: string, arxivId: string): PaperNote | null {
   // Extract fields from the "基本信息" section
   const titleMatch = content.match(/- \*\*标题\*\*:\s*(.+)/)
@@ -41,7 +53,7 @@ function parseNotesMarkdown(content: string, arxivId: string): PaperNote | null 
     slug: arxivId,
     title: titleMatch[1].trim(),
     authors: authorsMatch ? authorsMatch[1].trim() : '',
-    date: dateMatch[1].trim(),
+    date: normalizeDate(dateMatch[1].trim()),
     arxivId,
     arxivUrl: arxivUrlMatch ? arxivUrlMatch[1].trim() : '',
     keywords,
